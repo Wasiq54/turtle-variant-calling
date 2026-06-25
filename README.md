@@ -56,7 +56,7 @@ Pin versions to match the manuscript Methods.
 | Tool | Version | Used in |
 |------|---------|---------|
 | GATK | 4.6.2 | 03a, 04a, 05, 06b, 06c |
-| Google DeepVariant | 1.9.0 (Docker) | 03b, 06c |
+| Google DeepVariant | 1.9.0 (Docker, CPU image; GPU optional) | 03b, 06c |
 | GLnexus | (DeepVariantWGS config) | 04b |
 | samtools | 1.19.2 | 01, 02, 06b |
 | bcftools | 1.19 | 04b, 05, 05b, 06a, 06c, 07, 08 |
