@@ -9,15 +9,11 @@ set -euo pipefail
 source "$(dirname "$0")/00_setup.sh"
 start_log "03b_deepvariant"
 
-# Pinned version for reproducibility. CPU image (this study was run on CPU).
-# For GPU, set DV_VERSION=1.9.0-gpu and add `--gpus all` to the docker run below.
-DV_VERSION="${DV_VERSION:-1.9.0}"
+# DV_VERSION (CPU image 1.9.0) and DV_TAG come from 00_setup.sh (single source
+# of truth). This study was run on CPU; for GPU set DV_VERSION=1.9.0-gpu and add
+# `--gpus all` to the docker run below. DV_TAG keeps output names in sync with 04b.
 REF_DIR="$(dirname "$REF")"
 REF_NAME="$(basename "$REF")"
-
-# Output filename tag — MUST match the names expected by 04b_glnexus_merge.sh
-# (i.e. <SAMPLE>_deepvariant_1_9.g.vcf.gz).
-DV_TAG="deepvariant_1_9"
 
 for SAMPLE in $SAMPLES; do
     GVCF="$DV_GVCF_DIR/${SAMPLE}_${DV_TAG}.g.vcf.gz"

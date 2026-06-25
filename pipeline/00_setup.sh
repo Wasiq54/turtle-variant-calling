@@ -25,6 +25,10 @@ export THREADS_PER_SAMPLE=12   # 6 x 12 = 72 threads, leaves headroom
 export DV_SHARDS=64            # DeepVariant make_examples shards
 export HC_SCATTER=72           # GATK HaplotypeCaller interval scatter
 
+# --- Tool versions (single source of truth; pinned for reproducibility) ---
+export DV_VERSION="${DV_VERSION:-1.9.0}"   # DeepVariant CPU image (used in 03b and 06c)
+export DV_TAG="deepvariant_1_9"            # DeepVariant output-file name tag (03b -> 04b)
+
 # --- Descriptive output paths (single source of truth for all steps) ---
 export QC_DIR="$OUT_DIR/01_alignment_qc"
 export COV_DIR="$OUT_DIR/02_coverage"

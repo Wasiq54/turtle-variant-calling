@@ -40,7 +40,7 @@ else
     echo "[CALL] DeepVariant on simulated BAM ..."
     docker run --rm \
         -v "${REF_DIR}":/ref -v "${TRUTH_DIR}":/bam -v "${VCFEVAL_DIR}":/output \
-        google/deepvariant:"${DV_VERSION:-latest}" \
+        google/deepvariant:"${DV_VERSION}" \
         /opt/deepvariant/bin/run_deepvariant \
             --model_type=WGS --ref=/ref/"${REF_NAME}" \
             --reads=/bam/sim.final.bam --output_vcf=/output/DeepVariant/dv_sim.vcf.gz \
