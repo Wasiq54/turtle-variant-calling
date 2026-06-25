@@ -9,8 +9,9 @@ set -euo pipefail
 source "$(dirname "$0")/00_setup.sh"
 start_log "03b_deepvariant"
 
-# Pinned version for reproducibility (CPU image already present locally).
-DV_VERSION="${DV_VERSION:-1.9.0-gpu}"
+# Pinned version for reproducibility. CPU image (this study was run on CPU).
+# For GPU, set DV_VERSION=1.9.0-gpu and add `--gpus all` to the docker run below.
+DV_VERSION="${DV_VERSION:-1.9.0}"
 REF_DIR="$(dirname "$REF")"
 REF_NAME="$(basename "$REF")"
 
@@ -25,8 +26,8 @@ for SAMPLE in $SAMPLES; do
         continue
     fi
 
-    echo "[DV] $SAMPLE (DeepVariant $DV_VERSION) ..."
-    docker run --rm --gpus all \
+    echo "[DV] $SAMPLE (DeepVariant $DV_VERSION, CPU) ..."
+    docker run --rm \
         -v "${REF_DIR}":/ref \
         -v "${BAM_DIR}":/bam \
         -v "${DV_GVCF_DIR}":/output \
@@ -39,6 +40,7 @@ for SAMPLE in $SAMPLES; do
             --output_gvcf=/output/"${SAMPLE}_${DV_TAG}".g.vcf.gz \
             --num_shards="${DV_SHARDS}" \
             --intermediate_results_dir=/output/"${SAMPLE}"_tmp \
+            --make_examples_extra_args="small_model_call_multiallelics=false" \
         2> "$DV_GVCF_DIR/${SAMPLE}.dv.log"
 
     rm -rf "${DV_GVCF_DIR}/${SAMPLE}_tmp"
