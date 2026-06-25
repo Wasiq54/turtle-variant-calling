@@ -14,8 +14,12 @@ DV_VERSION="${DV_VERSION:-1.9.0-gpu}"
 REF_DIR="$(dirname "$REF")"
 REF_NAME="$(basename "$REF")"
 
+# Output filename tag — MUST match the names expected by 04b_glnexus_merge.sh
+# (i.e. <SAMPLE>_deepvariant_1_9.g.vcf.gz).
+DV_TAG="deepvariant_1_9"
+
 for SAMPLE in $SAMPLES; do
-    GVCF="$DV_GVCF_DIR/${SAMPLE}.g.vcf.gz"
+    GVCF="$DV_GVCF_DIR/${SAMPLE}_${DV_TAG}.g.vcf.gz"
     if [ -f "$GVCF" ]; then
         echo "[SKIP] $SAMPLE DeepVariant GVCF already exists"
         continue
@@ -31,8 +35,8 @@ for SAMPLE in $SAMPLES; do
             --model_type=WGS \
             --ref=/ref/"${REF_NAME}" \
             --reads=/bam/"${SAMPLE}".final.bam \
-            --output_vcf=/output/"${SAMPLE}".vcf.gz \
-            --output_gvcf=/output/"${SAMPLE}".g.vcf.gz \
+            --output_vcf=/output/"${SAMPLE}_${DV_TAG}".vcf.gz \
+            --output_gvcf=/output/"${SAMPLE}_${DV_TAG}".g.vcf.gz \
             --num_shards="${DV_SHARDS}" \
             --intermediate_results_dir=/output/"${SAMPLE}"_tmp \
         2> "$DV_GVCF_DIR/${SAMPLE}.dv.log"
