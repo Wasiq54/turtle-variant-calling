@@ -15,7 +15,7 @@ JOINT_VCF="$DV_JOINT_DIR/dv_joint.vcf.gz"
 # Collect the 6 per-sample DeepVariant GVCFs
 GVCFS=()
 for SAMPLE in $SAMPLES; do
-    GVCFS+=("$DV_GVCF_DIR/${SAMPLE}_deepvariant_1_9.g.vcf.gz")
+    GVCFS+=("$DV_GVCF_DIR/${SAMPLE}_${DV_TAG}.g.vcf.gz")
 done
 
 # GLnexus refuses to run if its scratch DB dir already exists
