@@ -1,0 +1,29 @@
+# Never commit large data / binary outputs — these belong on Zenodo, not GitHub
+*.bam
+*.bai
+*.cram
+*.crai
+*.vcf
+*.vcf.gz
+*.vcf.gz.tbi
+*.g.vcf.gz
+*.fa
+*.fasta
+*.fa.gz
+*.fasta.gz
+*.fai
+*.dict
+*.sdf/
+*.tiff
+*.tif
+
+# Logs and temp
+*.log
+*.tmp
+tmp/
+results/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
