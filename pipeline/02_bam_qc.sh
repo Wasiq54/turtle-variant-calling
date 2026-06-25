@@ -19,16 +19,16 @@ qc_one() {
     echo "[START] $SAMPLE"
 
     # Alignment summary — total reads, mapping %, duplicates (seconds)
-    samtools flagstat -@ 4 "$BAM" > "$OUT_DIR/qc/${SAMPLE}.flagstat.txt"
+    samtools flagstat -@ 4 "$BAM" > "$QC_DIR/${SAMPLE}.flagstat.txt"
 
     # Coverage — mean depth + % genome >=10x (minutes). Cap at 4 threads (mosdepth max useful).
     mosdepth --threads 4 --no-per-base --fast-mode \
-        "$OUT_DIR/coverage/${SAMPLE}" "$BAM"
+        "$COV_DIR/${SAMPLE}" "$BAM"
 
     echo "[DONE]  $SAMPLE"
 }
 export -f qc_one
-export BAM_DIR OUT_DIR
+export BAM_DIR OUT_DIR QC_DIR COV_DIR
 
 # Launch all 6 samples in parallel
 for SAMPLE in $SAMPLES; do
@@ -44,7 +44,7 @@ if [ "$RUN_FULL_STATS" = "1" ]; then
     echo "[FULL STATS] Running detailed samtools stats (slow) ..."
     for SAMPLE in $SAMPLES; do
         BAM="$BAM_DIR/${SAMPLE}.final.bam"
-        samtools stats -@ "$THREADS_PER_SAMPLE" "$BAM" > "$OUT_DIR/qc/${SAMPLE}.stats.txt" &
+        samtools stats -@ "$THREADS_PER_SAMPLE" "$BAM" > "$QC_DIR/${SAMPLE}.stats.txt" &
     done
     wait
     echo "[FULL STATS] Done."
@@ -54,16 +54,16 @@ fi
 
 # --- Aggregate with MultiQC if available ---
 if command -v multiqc &>/dev/null; then
-    multiqc "$OUT_DIR/qc" "$OUT_DIR/coverage" -o "$OUT_DIR/qc" -n multiqc_report 2>/dev/null
-    echo "[MULTIQC] Report: $OUT_DIR/qc/multiqc_report.html"
+    multiqc "$QC_DIR" "$COV_DIR" -o "$QC_DIR" -n multiqc_report 2>/dev/null
+    echo "[MULTIQC] Report: $QC_DIR/multiqc_report.html"
 fi
 
 echo ""
 echo "=== Quick Table 1 preview ==="
 printf "%-8s %-16s %-10s %-12s\n" "Sample" "TotalReads" "Mapped%" "MeanDepth"
 for SAMPLE in $SAMPLES; do
-    FS="$OUT_DIR/qc/${SAMPLE}.flagstat.txt"
-    SUM="$OUT_DIR/coverage/${SAMPLE}.mosdepth.summary.txt"
+    FS="$QC_DIR/${SAMPLE}.flagstat.txt"
+    SUM="$COV_DIR/${SAMPLE}.mosdepth.summary.txt"
     TOTAL=$(grep "in total" "$FS" 2>/dev/null | awk '{print $1}')
     MAPPCT=$(grep "mapped (" "$FS" 2>/dev/null | head -1 | grep -oP '\(\K[^%]+')
     DEPTH=$(awk '$1=="total"{print $4}' "$SUM" 2>/dev/null)
@@ -71,4 +71,4 @@ for SAMPLE in $SAMPLES; do
 done
 
 echo ""
-echo "BAM QC complete. Results in $OUT_DIR/qc/ and $OUT_DIR/coverage/"
+echo "BAM QC complete. Results in $QC_DIR/ and $COV_DIR/"

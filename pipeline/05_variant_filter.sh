@@ -7,12 +7,13 @@ set -euo pipefail
 source "$(dirname "$0")/00_setup.sh"
 start_log "05_variant_filter"
 
-JOINT_VCF="$OUT_DIR/vcf/all_samples.vcf.gz"
-SNP_RAW="$OUT_DIR/filtered/snps_raw.vcf.gz"
-INDEL_RAW="$OUT_DIR/filtered/indels_raw.vcf.gz"
-SNP_FILTERED="$OUT_DIR/filtered/snps_filtered.vcf.gz"
-INDEL_FILTERED="$OUT_DIR/filtered/indels_filtered.vcf.gz"
-FINAL_VCF="$OUT_DIR/filtered/final_filtered.vcf.gz"
+# Filters the GATK joint call set. (DeepVariant set is filtered natively by GLnexus QUAL.)
+JOINT_VCF="$GATK_JOINT_DIR/gatk_joint.vcf.gz"
+SNP_RAW="$FILTER_DIR/snps_raw.vcf.gz"
+INDEL_RAW="$FILTER_DIR/indels_raw.vcf.gz"
+SNP_FILTERED="$FILTER_DIR/snps_filtered.vcf.gz"
+INDEL_FILTERED="$FILTER_DIR/indels_filtered.vcf.gz"
+FINAL_VCF="$FILTER_DIR/gatk_final.vcf.gz"
 
 # --- 5a: Separate SNPs and INDELs ---
 echo "[FILTER] Extracting SNPs ..."
